@@ -41,11 +41,11 @@ public class TrueTranslate extends BaseTranslate {
                 && tLang.getLanguageCode().compareToIgnoreCase("en") == 0) {
             ver = System.getProperty("truetranslate.api.chen");
         } else {
-            throw new IllegalArgumentException("Language not supported.");
+            return OStrings.getString("MT_ENGINE_TRUE_LANGUAGE_PAIR_NOT_SUPPORTED");
         }
 
         if (ver == null) {
-            return null;
+            return OStrings.getString("MT_ENGINE_TRUE_VERSION_NOT_SET");
         }
 
         totw = isCht(sLang) || isCht(tLang);
@@ -54,7 +54,6 @@ public class TrueTranslate extends BaseTranslate {
         params.put("ver", ver);
         params.put("totw", totw ? "1" : "0");
         params.put("txt", text);
-
         // Get the results from TrueTranslate
         String response = "";
         try {
@@ -67,7 +66,7 @@ public class TrueTranslate extends BaseTranslate {
 
         String rootStatus = jResponseObj.getString("stat");
         if (rootStatus == null || !"success".equals(rootStatus.trim())) { // Fail
-            return null;
+            return jResponseObj.getString("msg");
         }
 
         JSONObject jRootMsgObj = jResponseObj.getJSONObject("msg");
@@ -76,7 +75,7 @@ public class TrueTranslate extends BaseTranslate {
         int sentenceCount = jRootMsgObj.getInt("sen");
 
         if (failCount == sentenceCount) { // All fail
-            return null;
+            return OStrings.getString("MT_ENGINE_TRUE_TRANSLATION_FAIL");
         }
 
         String tr = "";
