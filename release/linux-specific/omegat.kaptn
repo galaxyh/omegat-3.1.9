@@ -174,15 +174,14 @@ yand_hc :horizontal -> @close="Close" ;
 
 # TrueTranslate API configurations
 
-tt "TrueTranslate settings" -> tti ttk ttcht ttench ttchen tt_help ;
-tti "Microsoft Translator API Client ID" -> @password="" ;
-ttk "Microsoft Translator API Secret Key" -> @password="" ;
+tt "TrueTranslate settings" -> ttk ttench ttchen tt_help ;
+ttk "TrueTranslate API Key" -> @password="" ;
 ttench "English-Chinese version" -> @string="";
 ttchen "Chinese-English version" -> @string="";
 
 tt_help :dialog "Help" -> tt_m tt_hc ;
 tt_m :horizontal ->  tt_t ;
-tt_t "To use TrueTranslate within OmegaT, you must order \na client ID and a secret key from TrueTranslate\nand enter them here." -> @ ;
+tt_t "To use TrueTranslate within OmegaT, you must order \na API key from TrueTranslate\nand enter them here." -> @ ;
 tt_hc :horizontal -> @close="Close";
 
 
@@ -274,4 +273,4 @@ close_button -> @close="Cancel" ;
 
 ### Launch command
 
-omt -> javaloc " -jar " memory " -Duser.language=" UIlang " -Duser.country=" country " -Dtruetranslate.api.client_id=" tti " -Dtruetranslate.api.client_secret=" ttk " -Dtruetranslate.api.ench=" ttench " -Dtruetranslate.api.chen=" ttchen " -Dgoogle.api.key=" gt " -Dmicrosoft.api.client_secret=" msk " -Dmicrosoft.api.client_id=" msi " -Dmymemory.api.email=" mymem " -Dtaas.user.key=" taas " -Dyandex.api.key=" yand " -Dhttp.proxyHost=" proxyport " -Dawt.useSystemAAFontSettings=" fontaa laf " " jarfileloc " " projectloc " --config-dir=" configloc team;
+omt -> javaloc " -jar " memory " -Duser.language=" UIlang " -Duser.country=" country " -Dtruetranslate.api.key=" ttk " -Dtruetranslate.api.ench=" ttench " -Dtruetranslate.api.chen=" ttchen " -Dgoogle.api.key=" gt " -Dmicrosoft.api.client_secret=" msk " -Dmicrosoft.api.client_id=" msi " -Dmymemory.api.email=" mymem " -Dtaas.user.key=" taas " -Dyandex.api.key=" yand " -Dhttp.proxyHost=" proxyport " -Dawt.useSystemAAFontSettings=" fontaa laf " " jarfileloc " " projectloc " --config-dir=" configloc team;

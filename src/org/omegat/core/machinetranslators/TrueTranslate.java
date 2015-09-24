@@ -1,6 +1,7 @@
 package org.omegat.core.machinetranslators;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.omegat.util.Language;
 import org.omegat.util.OStrings;
@@ -28,8 +29,10 @@ public class TrueTranslate extends BaseTranslate {
 
     @Override
     protected String translate(Language sLang, Language tLang, String text) throws Exception {
-        //String id = System.getProperty("truetranslate.api.client_id");
-        //String password = System.getProperty("truetranslate.api.client_secret");
+        String key = System.getProperty("truetranslate.api.key");
+        if (key == null) {
+            return OStrings.getString("MT_ENGINE_TRUE_API_KEY_NOTFOUND");
+        }
 
         boolean totw;
         String ver;
@@ -51,49 +54,53 @@ public class TrueTranslate extends BaseTranslate {
         totw = isCht(sLang) || isCht(tLang);
 
         Map<String, String> params = new HashMap<String, String>();
+        params.put("key", key);
         params.put("ver", ver);
         params.put("totw", totw ? "1" : "0");
         params.put("txt", text);
         // Get the results from TrueTranslate
-        String response = "";
+        String response;
         try {
             response = WikiGet.post(TT_URL, params);
         } catch (IOException e) {
             throw e;
         }
 
-        JSONObject jResponseObj = new JSONObject(response);
+        String translation = "";
+        try {
+            JSONObject jResponseObj = new JSONObject(response);
 
-        String rootStatus = jResponseObj.getString("stat");
-        if (rootStatus == null || !"success".equals(rootStatus.trim())) { // Fail
-            return jResponseObj.getString("msg");
-        }
-
-        JSONObject jRootMsgObj = jResponseObj.getJSONObject("msg");
-        int failCount = jRootMsgObj.getInt("fail");
-        // int okCount = jRootMsgObj.getInt("ok");
-        int sentenceCount = jRootMsgObj.getInt("sen");
-
-        if (failCount == sentenceCount) { // All fail
-            return OStrings.getString("MT_ENGINE_TRUE_TRANSLATION_FAIL");
-        }
-
-        String tr = "";
-
-        JSONArray jSentences = jResponseObj.getJSONArray("sen");
-        for (int i = 0; i < jSentences.length(); i++) {
-            JSONObject jSentenceObj = jSentences.getJSONObject(i);
-            // String msg = jSentenceObj.getString("msg");
-            // String ori = jSentenceObj.getString("ori");
-            String res = jSentenceObj.getString("res");
-            String stat = jSentenceObj.getString("stat");
-
-            if ("success".equals(stat)) {
-                tr += res + "";
+            String rootStatus = jResponseObj.getString("stat");
+            if (rootStatus == null || !"success".equals(rootStatus.trim())) { // Fail
+                return jResponseObj.getString("msg");
             }
+
+            JSONObject jRootMsgObj = jResponseObj.getJSONObject("msg");
+            int failCount = jRootMsgObj.getInt("fail");
+            // int okCount = jRootMsgObj.getInt("ok");
+            int sentenceCount = jRootMsgObj.getInt("sen");
+
+            if (failCount == sentenceCount) { // All fail
+                return OStrings.getString("MT_ENGINE_TRUE_TRANSLATION_FAIL");
+            }
+
+            JSONArray jSentences = jResponseObj.getJSONArray("sen");
+            for (int i = 0; i < jSentences.length(); i++) {
+                JSONObject jSentenceObj = jSentences.getJSONObject(i);
+                // String msg = jSentenceObj.getString("msg");
+                // String ori = jSentenceObj.getString("ori");
+                String res = jSentenceObj.getString("res");
+                String stat = jSentenceObj.getString("stat");
+
+                if ("success".equals(stat)) {
+                    translation += res + " ";
+                }
+            }
+        } catch (JSONException e) {
+            return OStrings.getString("MT_ENGINE_TRUE_UNEXPECTED_ERROR");
         }
 
-        return tr.trim();
+        return translation.trim();
     }
 
     private boolean isCht(Language lang) {

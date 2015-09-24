@@ -26,9 +26,8 @@ JAVA=../jre/bin/java
 # Yandex Translate API Key
 #YANDEX_API_KEY="-Dyandex.api.key=xxxxx"
 # TrueTranslate configurations
-#TT_CLIENT_ID="-Dtruetranslate.api.client_id=xxxxx"
-#TT_CLIENT_SECRET="-Dtruetranslate.api.client_secret=xxxxx"
+#TT_API_KEY="-Dtruetranslate.api.key=0123456789A0123456789B0123456789C0123456789D"
 #TT_ENCH="-Dtruetranslate.api.ench=xxx"
 #TT_CHEN="-Dtruetranslate.api.chen=xxx"
 
-${JAVA} -Xmx1024m ${MACOS} ${LANGUAGE} ${COUNTRY} ${PROXY_HOST} ${PROXY_PORT} ${TT_CLIENT_ID} ${TT_CLIENT_SECRET} ${TT_ENCH} ${TT_CHEN} ${GOOGLE_API_KEY} ${MS_CLIENT_ID} ${MS_CLIENT_SECRET} ${MY_MEMORY_EMAIL} ${TAAS_USER_KEY} ${YANDEX_API_KEY} -jar OmegaT.jar
+${JAVA} -Xmx1024m ${MACOS} ${LANGUAGE} ${COUNTRY} ${PROXY_HOST} ${PROXY_PORT} ${TT_API_KEY} ${TT_ENCH} ${TT_CHEN} ${GOOGLE_API_KEY} ${MS_CLIENT_ID} ${MS_CLIENT_SECRET} ${MY_MEMORY_EMAIL} ${TAAS_USER_KEY} ${YANDEX_API_KEY} -jar OmegaT.jar
